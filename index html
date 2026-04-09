@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicine Label Translator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+
+    <header class="header">
+      <h1 class="header__title">💊 Medicine Label Translator</h1>
+      <p class="header__subtitle">Simple explanations for everyone</p>
+    </header>
+
+    <main class="container">
+
+      <section class="upload-section">
+        <label for="imageInput" class="upload-box">
+          <span class="upload-box__icon">📷</span>
+          <span class="upload-box__text">Click to upload a medicine label</span>
+          <span class="upload-box__hint">Supports JPG, PNG, WEBP</span>
+          <input type="file" id="imageInput" accept="image/*" hidden />
+        </label>
+      </section>
+
+      <section class="preview-section" id="previewSection">
+        <h2 class="section-title">Preview</h2>
+        <div class="preview-box">
+          <img
+            id="previewImage"
+            src=""
+            alt="Uploaded medicine label preview"
+            class="preview-image"
+          />
+        </div>
+      </section>
+
+      <section class="result-section">
+        <h2 class="section-title">Translation Result</h2>
+        <div class="result-box">
+         
+            <div id="output" class="result-box__text placeholder">
+            <p>Your result will appear here...</p>
+            </div>
+        </div>
+
+          
+        
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <p>Always consult a doctor or pharmacist for medical advice.</p>
+    </footer>
+
+    <script src="app.js"></script>
+
+  </body>
+
+</html>
