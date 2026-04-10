@@ -124,11 +124,11 @@ body {
 }
 
 .nav-pills .pill {
-  padding: 15px 30px;
+  padding: 10px 25px;
   border-radius: 25% 10%;
   cursor: pointer;
   background: lightblue;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 /* =========================
