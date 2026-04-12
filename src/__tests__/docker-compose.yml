@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      target: production
+    container_name: medicine-label-api
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      API_VERSION: v1
+
+      # ── OpenAI ───────────────────────────────────────────────
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o}
+      OPENAI_MAX_TOKENS: ${OPENAI_MAX_TOKENS:-1200}
+      OPENAI_TEMPERATURE: ${OPENAI_TEMPERATURE:-0.2}
+
+      # ── GCP Vision ───────────────────────────────────────────
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+      # Mount the service account key as a volume (see volumes below)
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/gcp-credentials.json
+
+      # ── Auth ─────────────────────────────────────────────────
+      ALLOWED_API_KEYS: ${ALLOWED_API_KEYS:-dev-key-change-me}
+
+      # ── Feature Flags ─────────────────────────────────────────
+      MLKIT_PASSTHROUGH_ENABLED: 'true'
+
+      # ── Logging ──────────────────────────────────────────────
+      LOG_LEVEL: debug
+      LOG_DIR: /app/logs
+
+      # ── Upload ───────────────────────────────────────────────
+      UPLOAD_TEMP_DIR: /app/uploads
+      UPLOAD_MAX_SIZE_MB: 10
+
+      # ── Rate Limiting ─────────────────────────────────────────
+      RATE_LIMIT_WINDOW_MS: 60000
+      RATE_LIMIT_MAX_REQUESTS: 30
+
+    volumes:
+      # Mount GCP service account key (never bake credentials into the image)
+      - ${GCP_CREDENTIALS_PATH:-./config/gcp-service-account.json}:/run/secrets/gcp-credentials.json:ro
+      # Persist logs on host for debugging
+      - ./logs:/app/logs
+      # Hot-reload source in dev (remove in prod)
+      - ./src:/app/src:ro
+
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    networks:
+      - medicine-net
+
+networks:
+  medicine-net:
+    driver: bridge
